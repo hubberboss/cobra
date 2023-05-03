@@ -4,6 +4,14 @@ const ctx = canvas.getContext("2d");
 const width = canvas.width;
 const height = canvas.height;
 
+// Define the obstacles
+const obstacles = [
+  { x: 5, y: 5 },
+  { x: 15, y: 10 },
+  { x: 20, y: 15 },
+  { x: 10, y: 20 },
+];
+
 // Set up the game variables
 let snake = [{ x: 10, y: 10 }];
 let food = { x: 0, y: 0 };
@@ -61,7 +69,12 @@ for (let i = 1; i < snake.length; i++) {
       return;
     }
   }
-
+  for (let i = 0; i < obstacles.length; i++) {
+    if (head.x === obstacles[i].x && head.y === obstacles[i].y) {
+      gameOver();
+      return;
+    }
+  }
   // Draw the game
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = "green";
@@ -73,9 +86,55 @@ for (let i = 1; i < snake.length; i++) {
   ctx.fillStyle = "white";
   ctx.fillText(`Score: ${score}`, 10, 20);
 
+  ctx.fillStyle = "#9E9E9E"; // gray
+for (let i = 0; i < obstacles.length; i++) {
+  ctx.fillRect(obstacles[i].x * 10, obstacles[i].y * 10, 10, 10);
+}
+
   // Call the game loop again
   setTimeout(gameLoop, 100);
 }
+
+// Add touch controls
+let touchStartX = 0;
+let touchStartY = 0;
+document.addEventListener("touchstart", (event) => {
+  touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY;
+});
+document.addEventListener("touchmove", (event) => {
+  const touchEndX = event.touches[0].clientX;
+  const touchEndY = event.touches[0].clientY;
+  const dx = touchEndX - touchStartX;
+  const dy = touchEndY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy)) {
+    // Horizontal swipe
+    if (dx > 0) {
+      // Right swipe
+      if (direction !== "left") {
+        direction = "right";
+      }
+    } else {
+      // Left swipe
+      if (direction !== "right") {
+        direction = "left";
+      }
+    }
+  } else {
+    // Vertical swipe
+    if (dy > 0) {
+      // Down swipe
+      if (direction !== "up") {
+        direction = "down";
+      }
+    } else {
+      // Up swipe
+      if (direction !== "down") {
+        direction = "up";
+      }
+    }
+  }
+});
 
 // Set up the keyboard controls
 document.addEventListener("keydown", event => {
