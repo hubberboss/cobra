@@ -7,7 +7,7 @@ const height = canvas.height;
 // Define the obstacles
 const obstacles = [
   { x: 5, y: 5 },
-  { x: 15, y: 10 },
+  { x: 20, y: 20 },
   { x: 20, y: 15 },
   { x: 10, y: 20 },
 ];
