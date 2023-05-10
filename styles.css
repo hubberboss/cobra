@@ -1,0 +1,40 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background-color: #333;
+  color: #fff;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+canvas {
+  border: 5px solid #fff;
+  background-color: #000;
+}
+
+#start-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #ff6347; /* Tomato color */
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#start-button:hover {
+  background-color: #ff4500; /* OrangeRed color */
+}
+
+#start-button:active {
+  background-color: #ff6347; /* Tomato color */
+}

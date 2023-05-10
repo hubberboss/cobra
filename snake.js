@@ -1,25 +1,37 @@
-// Set up the canvas
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-const width = canvas.width;
-const height = canvas.height;
 
-// Define the obstacles
-const obstacles = [
-  { x: 5, y: 5 },
-  { x: 20, y: 20 },
-  { x: 20, y: 15 },
-  { x: 10, y: 20 },
-];
+// Define the canvas and its dimensions globally
+let canvas, ctx, width, height;
 
-// Set up the game variables
-let snake = [{ x: 10, y: 10 }];
-let food = { x: 0, y: 0 };
-let direction = "right";
-let score = 0;
+window.onload = function() {
+  canvas = document.getElementById("canvas");
+  ctx = canvas.getContext("2d");
+  width = canvas.width;
+  height = canvas.height;
 
+  // Define the obstacles
+  const obstacles = [
+    { x: 5, y: 5 },
+    { x: 20, y: 20 },
+    { x: 20, y: 15 },
+    { x: 10, y: 20 },
+  ];
+
+  // Set up the game variables
+  let snake = [{ x: 10, y: 10 }];
+  let food = { x: 0, y: 0 };
+  let direction = "right";
+  let score = 0;
+
+  // Define the initial game speed (milliseconds)
+  let speed = 200;
+
+  // Define game loop interval
+  let gameInterval;
 // Set up the game loop
 function gameLoop() {
+  // Clear the current game interval
+  clearInterval(gameInterval);
+
   // Move the snake
   let head = { x: snake[0].x, y: snake[0].y };
   switch (direction) {
@@ -36,63 +48,36 @@ function gameLoop() {
       head.x++;
       break;
   }
+
+  // Game Over if snake is out of canvas or hits itself
+  if (head.x < 0 || head.y < 0 || head.x >= width / 10 || head.y >= height / 10 || snake.some((s) => s.x === head.x && s.y === head.y)) {
+    gameOver();
+    return;
+  }
+
   snake.unshift(head);
 
   // Check for collision with food
   if (head.x === food.x && head.y === food.y) {
     score++;
+    // Increase the game speed with every point, up to a minimum limit
+    speed = Math.max(50, speed - 5);
     generateFood();
   } else {
     snake.pop();
   }
 
-// Check for collision with walls or self
-if (head.x < 0) {
-  head.x = width / 10 - 1;
-} else if (head.x >= width / 10) {
-  head.x = 0;
-}
-if (head.y < 0) {
-  head.y = height / 10 - 1;
-} else if (head.y >= height / 10) {
-  head.y = 0;
-}
-for (let i = 1; i < snake.length; i++) {
-  if (head.x === snake[i].x && head.y === snake[i].y) {
-    gameOver();
-    return;
-  }
-}
-  for (let i = 1; i < snake.length; i++) {
-    if (head.x === snake[i].x && head.y === snake[i].y) {
-      gameOver();
-      return;
-    }
-  }
-  for (let i = 0; i < obstacles.length; i++) {
-    if (head.x === obstacles[i].x && head.y === obstacles[i].y) {
-      gameOver();
-      return;
-    }
-  }
-  // Draw the game
+  // Clear canvas and draw snake and food
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = "green";
-  for (let i = 0; i < snake.length; i++) {
-    ctx.fillRect(snake[i].x * 10, snake[i].y * 10, 10, 10);
-  }
-  ctx.fillStyle = "red";
+  snake.forEach((s) => {
+    ctx.fillStyle = 'green';
+    ctx.fillRect(s.x * 10, s.y * 10, 10, 10);
+  });
+  ctx.fillStyle = 'red';
   ctx.fillRect(food.x * 10, food.y * 10, 10, 10);
-  ctx.fillStyle = "white";
-  ctx.fillText(`Score: ${score}`, 10, 20);
-
-  ctx.fillStyle = "#9E9E9E"; // gray
-for (let i = 0; i < obstacles.length; i++) {
-  ctx.fillRect(obstacles[i].x * 10, obstacles[i].y * 10, 10, 10);
-}
 
   // Call the game loop again
-  setTimeout(gameLoop, 100);
+  gameInterval = setInterval(gameLoop, speed);
 }
 
 // Add touch controls
@@ -169,6 +154,7 @@ function gameOver() {
   food = { x: 0, y: 0 };
   direction = "right";
   score = 0;
+  speed = 200; // Reset speed
   generateFood();
 }
 
@@ -184,7 +170,12 @@ function generateFood() {
   }
   food = { x, y };
 }
-
 // Start the game loop
 generateFood();
-gameLoop();
+
+// Add an event listener to the start button
+document.getElementById("start-button").addEventListener("click", function() {
+  // Start the game loop
+  gameLoop();
+});
+};
