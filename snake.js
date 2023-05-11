@@ -1,6 +1,7 @@
 
 // Define the canvas and its dimensions globally
 let canvas, ctx, width, height;
+let isPaused = false;
 
 window.onload = function() {
   canvas = document.getElementById("canvas");
@@ -31,6 +32,12 @@ window.onload = function() {
 function gameLoop() {
   // Clear the current game interval
   clearInterval(gameInterval);
+
+  // If game is paused, don't run the rest of the game loop
+  if (isPaused) {
+    gameInterval = setInterval(gameLoop, speed);
+    return;
+  }
 
   // Move the snake
   let head = { x: snake[0].x, y: snake[0].y };
@@ -173,9 +180,21 @@ function generateFood() {
 // Start the game loop
 generateFood();
 
+// Add an event listener to the pause button
+document.getElementById("pause-button").addEventListener("click", function() {
+  isPaused = !isPaused;
+  if (!isPaused) {
+    gameLoop();
+  }
+});
+
 // Add an event listener to the start button
 document.getElementById("start-button").addEventListener("click", function() {
   // Start the game loop
+  isPaused = false;
   gameLoop();
 });
 };
+
+
+

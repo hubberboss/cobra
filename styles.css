@@ -38,3 +38,22 @@ canvas {
 #start-button:active {
   background-color: #ff6347; /* Tomato color */
 }
+
+#pause-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #ff6347; /* Tomato color */
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#pause-button:hover {
+  background-color: #ff4500; /* OrangeRed color */
+}
+
+#pause-button:active {
+  background-color: #ff6347; /* Tomato color */
+}
