@@ -151,6 +151,7 @@ document.addEventListener("keydown", event => {
         direction = "right";
       }
       break;
+   
   }
 });
 
@@ -195,6 +196,13 @@ document.getElementById("start-button").addEventListener("click", function() {
   gameLoop();
 });
 };
+
+
+
+
+
+
+
 
 
 
